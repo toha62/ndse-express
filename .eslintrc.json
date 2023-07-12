@@ -1,0 +1,27 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+     "es6": true,
+     "browser": true,
+     "node": true
+  },
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
+    "no-underscore-dangle": [
+      "error", 
+      { "allowAfterThis": true }
+    ],
+    "no-plusplus": [
+      "error",
+      { "allowForLoopAfterthoughts": true }
+    ]
+  }
+}
