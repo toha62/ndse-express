@@ -97,7 +97,12 @@ router.get('/api/books/:id/download', (request, response) => {
     response.status(404);
     response.json('404 Страница не найдена');
   }
-  response.json(library[index]);
+
+  response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
+    if (err) {
+      response.status(404).json(err);
+    }
+  });
 });
 
 module.exports = router;
