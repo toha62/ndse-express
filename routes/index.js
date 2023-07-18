@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const upload = require('../middleware/upload');
 const Book = require('../Book');
 
 const library = [new Book('Война и мир', 'Л.Н.Толстой'), new Book('Академия', 'А.Азимов')];
@@ -28,18 +29,26 @@ router.get('/api/books/:id', (request, response) => {
   response.json(library[index]);
 });
 
-router.post('/api/books', (request, response) => {
-  const {
-    title, authors, description, favorite, fileCover, fileName,
-  } = request.body;
+router.post(
+  '/api/books',
+  upload.single('book-file'),
+  (request, response) => {
+    if (request.file) {
+      const {
+        title, authors, description, favorite, fileCover, fileName,
+      } = request.body;
+      const fileBook = request.file.filename;
 
-  const book = new Book(title, authors, description, favorite, fileCover, fileName);
+      const book = new Book(title, authors, description, favorite, fileCover, fileName, fileBook);
 
-  library.push(book);
+      library.push(book);
 
-  response.status(201);
-  response.json(book);
-});
+      response.status(201);
+      response.json(book);
+    }
+    response.json('File not found');
+  },
+);
 
 router.put('/api/books/:id', (request, response) => {
   const {
@@ -78,6 +87,17 @@ router.delete('/api/books/:id', (request, response) => {
 
   library.splice(index, 1);
   response.json('Ok');
+});
+
+router.get('/api/books/:id/download', (request, response) => {
+  const { id } = request.params;
+  const index = library.findIndex(item => item.id === id);
+
+  if (index === -1) {
+    response.status(404);
+    response.json('404 Страница не найдена');
+  }
+  response.json(library[index]);
 });
 
 module.exports = router;
