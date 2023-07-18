@@ -1,13 +1,11 @@
 const express = require('express');
-const Book = require('./Book');
+
+const router = express.Router();
+const Book = require('../Book');
 
 const library = [new Book('Война и мир', 'Л.Н.Толстой'), new Book('Академия', 'А.Азимов')];
 
-const app = express();
-
-app.use(express.json());
-
-app.post('/api/user/login', (request, response) => {
+router.post('/api/user/login', (request, response) => {
   response.status(201);
   response.json({
     id: 1,
@@ -15,11 +13,11 @@ app.post('/api/user/login', (request, response) => {
   });
 });
 
-app.get('/api/books', (request, response) => {
+router.get('/api/books', (request, response) => {
   response.json(library);
 });
 
-app.get('/api/books/:id', (request, response) => {
+router.get('/api/books/:id', (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
@@ -30,7 +28,7 @@ app.get('/api/books/:id', (request, response) => {
   response.json(library[index]);
 });
 
-app.post('/api/books', (request, response) => {
+router.post('/api/books', (request, response) => {
   const {
     title, authors, description, favorite, fileCover, fileName,
   } = request.body;
@@ -43,7 +41,7 @@ app.post('/api/books', (request, response) => {
   response.json(book);
 });
 
-app.put('/api/books/:id', (request, response) => {
+router.put('/api/books/:id', (request, response) => {
   const {
     title, authors, description, favorite, fileCover, fileName,
   } = request.body;
@@ -69,7 +67,7 @@ app.put('/api/books/:id', (request, response) => {
   response.json(library[index]);
 });
 
-app.delete('/api/books/:id', (request, response) => {
+router.delete('/api/books/:id', (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
@@ -82,5 +80,4 @@ app.delete('/api/books/:id', (request, response) => {
   response.json('Ok');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT);
+module.exports = router;
