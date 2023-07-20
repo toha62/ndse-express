@@ -6,19 +6,11 @@ const Book = require('../Book');
 
 const library = [new Book('Война и мир', 'Л.Н.Толстой'), new Book('Академия', 'А.Азимов')];
 
-router.post('/api/user/login', (request, response) => {
-  response.status(201);
-  response.json({
-    id: 1,
-    mail: 'test@mail.ru',
-  });
-});
-
-router.get('/api/books', (request, response) => {
+router.get('/', (request, response) => {
   response.json(library);
 });
 
-router.get('/api/books/:id', (request, response) => {
+router.get('/:id', (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
@@ -30,7 +22,7 @@ router.get('/api/books/:id', (request, response) => {
 });
 
 router.post(
-  '/api/books',
+  '/',
   upload.single('book-file'),
   (request, response) => {
     if (request.file) {
@@ -50,7 +42,7 @@ router.post(
   },
 );
 
-router.put('/api/books/:id', (request, response) => {
+router.put('/:id', (request, response) => {
   const {
     title, authors, description, favorite, fileCover, fileName,
   } = request.body;
@@ -76,7 +68,7 @@ router.put('/api/books/:id', (request, response) => {
   response.json(library[index]);
 });
 
-router.delete('/api/books/:id', (request, response) => {
+router.delete('/:id', (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
@@ -89,7 +81,7 @@ router.delete('/api/books/:id', (request, response) => {
   response.json('Ok');
 });
 
-router.get('/api/books/:id/download', (request, response) => {
+router.get('/:id/download', (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
