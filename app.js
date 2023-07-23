@@ -1,6 +1,6 @@
 const express = require('express');
 
-const indexRouter = require('./routes/index');
+const pagesRouter = require('./routes/pages');
 const userRouter = require('./routes/user');
 const booksRouter = require('./routes/books');
 
@@ -9,7 +9,7 @@ const app = express();
 app.set('view engine', 'ejs');
 
 app.use(express.json());
-app.use('/', indexRouter);
+app.use('/', pagesRouter);
 app.use('/api/user', userRouter);
 app.use('/api/books', booksRouter);
 
