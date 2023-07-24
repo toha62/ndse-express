@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head'); %>
+<body>
+  <%- include('../partials/nav-menu'); %>
+  <h3>Просмотр книг из библиотеки</h3> 
+ 
+  <% if (books.length) { %>
+    <div class="list-group">
+
+      <% books.map(book => { %>
+        <a href="#" class="list-group-item" aria-current="true">
+          <h5 class="mb-1"><%= book.title %></h5>       
+          <p class="mb-1"><%= book.authors %></p>
+          <small><%= book.description %></small>
+        </a>
+      <% }) %>
+
+    </div>
+  <% } else { %>
+    <h4>Библиотека пустая</h4>
+  <% } %>
+  
+  <%- include('../partials/footer'); %>
+</body>
+</html>

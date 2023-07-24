@@ -4,10 +4,14 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Book = require('../Book');
 
-const library = [new Book('Война и мир', 'Л.Н.Толстой'), new Book('Академия', 'А.Азимов')];
+const library = [
+  new Book('Война и мир', 'Л.Н.Толстой', 'Русская классика'),
+  new Book('Академия', 'А.Азимов', 'Фантастика'),
+];
 
 router.get('/', (request, response) => {
-  response.json(library);
+  response.render('pages/index', { books: library });
+  // response.json(library);
 });
 
 router.get('/:id', (request, response) => {
