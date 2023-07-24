@@ -5,8 +5,8 @@ const upload = require('../middleware/upload');
 const Book = require('../Book');
 
 const library = [
-  new Book('Война и мир', 'Л.Н.Толстой', 'Русская классика'),
-  new Book('Академия', 'А.Азимов', 'Фантастика'),
+  new Book('Война и мир', 'Л.Н.Толстой', 'Русская классика', ''),
+  new Book('Академия', 'А.Азимов', 'Фантастика', 't'),
 ];
 
 router.get('/', (request, response) => {
@@ -22,13 +22,16 @@ router.get('/:id', (request, response) => {
     response.status(404);
     response.json('404 Страница не найдена');
   }
-  response.json(library[index]);
+  response.render('pages/view', { book: library[index] });
+  // response.json(library[index]);
 });
 
 router.post(
   '/',
   upload.single('book-file'),
   (request, response) => {
+    console.log(request);
+    console.log(request.body, request.file);
     if (request.file) {
       const {
         title, authors, description, favorite, fileCover, fileName,

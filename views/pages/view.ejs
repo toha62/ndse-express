@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head'); %>
+<body>
+  <div class="container">
+    <%- include('../partials/nav-menu'); %>
+
+    <h3>Просмотр книги</h3>  
+   
+    <div class="card" style="width: 18rem;">
+      <img src="..." class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title"><%= book.title %></h5>
+        <h6 class="card-title"><%= book.authors %></h6>
+        <p class="card-text"><%= book.description %></p>        
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="book-favorite" <%- book.favorite ? 'checked' : '' %>>
+          <label class="form-check-label" for="book-favorite">В избранном</label>
+        </div>
+        <a href="/" class="btn btn-primary">Закрыть</a>
+      </div>
+    </div>
+    
+    <%- include('../partials/footer'); %>
+  </div>  
+</body>
+</html>
