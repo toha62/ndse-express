@@ -23,27 +23,29 @@ router.get('/:id', (request, response) => {
     response.json('404 Страница не найдена');
   }
   response.render('pages/view', { book: library[index] });
+
   // response.json(library[index]);
 });
 
 router.post(
   '/',
-  upload.single('book-file'),
+  // upload.single('book-file'),
+  upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
   (request, response) => {
-    console.log(request);
-    console.log(request.body, request.file);
-    if (request.file) {
+    if (request.files['book-file'][0] && request.files['cover-file'][0]) {
       const {
-        title, authors, description, favorite, fileCover, fileName,
+        title, authors, description, favorite, fileName,
       } = request.body;
-      const fileBook = request.file.filename;
+      const fileBook = request.files['book-file'][0].filename;
+      const fileCover = request.files['cover-file'][0].filename;
 
       const book = new Book(title, authors, description, favorite, fileCover, fileName, fileBook);
 
       library.push(book);
 
       response.status(201);
-      response.json(book);
+      response.render('pages/view', { book: library[library.length - 1] });
+      // response.json(book);
     }
     response.json('File not found');
   },

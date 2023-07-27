@@ -7,27 +7,33 @@
     <form action="/api/books" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="book-title" class="form-label">Название Книги</label>
-        <input type="text" class="form-control" id="book-title">
+        <input type="text" class="form-control" id="book-title" name="title">
       </div>
       <div class="mb-3">
         <label for="book-authors" class="form-label">Авторы книги</label>
-        <input type="text" class="form-control" id="book-authors" aria-describedby="emailHelp">        
+        <input type="text" class="form-control" id="book-authors" name="authors">        
+      </div>
+      <div class="mb-3">
+        <label for="book-desc" class="form-label">Описание</label>
+        <input type="text" class="form-control" id="book-desc" name="description">        
       </div>
       <div class="mb-3">
         <label for="book-cover" class="form-label">Обложка Книги</label>
-        <input type="file" class="form-control" id="book-cover">
+        <input type="file" class="form-control" id="book-cover" name="cover-file">
       </div>
       <div class="mb-3">
         <label for="book-file" class="form-label">Файл Книги</label>
-        <input type="file" class="form-control" id="book-file">
+        <input type="file" class="form-control" id="book-file" name="book-file">
       </div>
       <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="book-favorite">
+        <input type="checkbox" class="form-check-input" id="book-favorite" name="favorite">
         <label class="form-check-label" for="book-favorite">В избранном</label>
       </div>
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <a href="/" class="btn btn-primary">Отменить</a>
     </form>
-  </div>  
+  </div> 
+  
+  <%- include('../partials/footer'); %>
 </body>
 </html>

@@ -17,11 +17,12 @@
           <input type="checkbox" class="form-check-input" id="book-favorite" <%- book.favorite ? 'checked' : '' %>>
           <label class="form-check-label" for="book-favorite">В избранном</label>
         </div>
-        <a href="/" class="btn btn-primary">Закрыть</a>
+        <a href="/api/books" class="btn btn-primary">Редактировать</a>
+        <a href="/api/books" class="btn btn-primary">Закрыть</a>        
       </div>
-    </div>
-    
-    <%- include('../partials/footer'); %>
-  </div>  
+    </div>    
+  </div> 
+
+  <%- include('../partials/footer'); %> 
 </body>
 </html>
