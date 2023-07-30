@@ -20,9 +20,9 @@ router.get('/:id', (request, response) => {
 
   if (index === -1) {
     response.status(404);
-    response.json('404 Страница не найдена');
+    return response.json('404 Страница не найдена');
   }
-  response.render('pages/view', { book: library[index] });
+  return response.render('pages/view', { book: library[index] });
 
   // response.json(library[index]);
 });
@@ -33,9 +33,9 @@ router.get('/update/:id', (request, response) => {
 
   if (index === -1) {
     response.status(404);
-    response.json('404 Страница не найдена');
+    return response.json('404 Страница не найдена');
   }
-  response.render('pages/update', { book: library[index] });
+  return response.render('pages/update', { book: library[index] });
 });
 
 router.post(
@@ -103,11 +103,11 @@ router.delete('/:id', (request, response) => {
 
   if (index === -1) {
     response.status(404);
-    response.json('404 Страница не найдена');
+    return response.json('404 Страница не найдена');
   }
 
   library.splice(index, 1);
-  response.json('Ok');
+  return response.json('Ok');
 });
 
 router.get('/:id/download', (request, response) => {
@@ -116,7 +116,7 @@ router.get('/:id/download', (request, response) => {
 
   if (index === -1) {
     response.status(404);
-    response.json('404 Страница не найдена');
+    return response.json('404 Страница не найдена');
   }
 
   response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
