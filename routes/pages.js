@@ -10,4 +10,8 @@ router.get('/create', (request, response) => {
   response.render('pages/create');
 });
 
+router.get('/update', (request, response) => {
+  response.render('pages/update');
+});
+
 module.exports = router;

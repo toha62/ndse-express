@@ -27,6 +27,17 @@ router.get('/:id', (request, response) => {
   // response.json(library[index]);
 });
 
+router.get('/update/:id', (request, response) => {
+  const { id } = request.params;
+  const index = library.findIndex(item => item.id === id);
+
+  if (index === -1) {
+    response.status(404);
+    response.json('404 Страница не найдена');
+  }
+  response.render('pages/update', { book: library[index] });
+});
+
 router.post(
   '/',
   // upload.single('book-file'),
@@ -44,38 +55,47 @@ router.post(
       library.push(book);
 
       response.status(201);
-      response.render('pages/view', { book: library[library.length - 1] });
+      return response.redirect('/api/books');
       // response.json(book);
     }
-    response.json('File not found');
+    return response.json('File not found');
   },
 );
 
-router.put('/:id', (request, response) => {
-  const {
-    title, authors, description, favorite, fileCover, fileName,
-  } = request.body;
-  const { id } = request.params;
-  const index = library.findIndex(item => item.id === id);
+router.post(
+  '/:id',
+  upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
+  (request, response) => {
+    const { id } = request.params;
+    const index = library.findIndex(item => item.id === id);
 
-  if (index === -1) {
-    response.status(404);
-    response.json('404 Страница не найдена');
-  }
+    if (index === -1) {
+      response.status(404);
+      return response.json('404 Страница не найдена');
+    }
 
-  library[index] = {
-    ...library[index],
-    title,
-    authors,
-    description,
-    favorite,
-    fileCover,
-    fileName,
-  };
+    const {
+      title, authors, description, favorite, fileName,
+    } = request.body;
+    const fileBook = request.files['book-file'][0].filename;
+    const fileCover = request.files['cover-file'][0].filename;
 
-  response.status(200);
-  response.json(library[index]);
-});
+    library[index] = {
+      ...library[index],
+      title,
+      authors,
+      description,
+      favorite,
+      fileCover,
+      fileName,
+      fileBook,
+    };
+
+    response.status(200);
+    return response.redirect('/api/books');
+    // response.json(library[index]);
+  },
+);
 
 router.delete('/:id', (request, response) => {
   const { id } = request.params;
