@@ -45,10 +45,11 @@ router.post(
   (request, response) => {
     if (request.files['book-file'][0] && request.files['cover-file'][0]) {
       const {
-        title, authors, description, favorite, fileName,
+        title, authors, description, favorite,
       } = request.body;
       const fileBook = request.files['book-file'][0].filename;
       const fileCover = request.files['cover-file'][0].filename;
+      const fileName = request.files['book-file'][0].originalname;
 
       const book = new Book(title, authors, description, favorite, fileCover, fileName, fileBook);
 
@@ -75,10 +76,11 @@ router.post(
     }
 
     const {
-      title, authors, description, favorite, fileName,
+      title, authors, description, favorite,
     } = request.body;
     const fileBook = request.files['book-file'][0].filename;
     const fileCover = request.files['cover-file'][0].filename;
+    const fileName = request.files['book-file'][0].originalname;
 
     library[index] = {
       ...library[index],
