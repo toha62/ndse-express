@@ -7,11 +7,11 @@
     <form action="/api/books/<%= book.id %>" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="book-title" class="form-label">Название Книги</label>
-        <input type="text" value="<%- book.title %>" class="form-control" id="book-title" name="title">
+        <input type="text" value="<%- book.title %>" class="form-control" id="book-title" name="title" required>
       </div>
       <div class="mb-3">
         <label for="book-authors" class="form-label">Авторы книги</label>
-        <input type="text" value="<%- book.authors %>" class="form-control" id="book-authors" name="authors">        
+        <input type="text" value="<%- book.authors %>" class="form-control" id="book-authors" name="authors" required>        
       </div>
       <div class="mb-3">
         <label for="book-desc" class="form-label">Описание</label>
@@ -19,11 +19,11 @@
       </div>
       <div class="mb-3">
         <label for="book-cover" class="form-label">Обложка Книги</label>
-        <input type="file" class="form-control" id="book-cover" name="cover-file" value="<%- book.fileCover %>">
+        <input type="file" class="form-control" id="book-cover" name="cover-file" value="<%- book.fileCover %>" required>
       </div>
       <div class="mb-3">
         <label for="book-file" class="form-label">Файл Книги</label>
-        <input type="file" class="form-control" id="book-file" name="book-file" value="<%- book.fileBook %>">
+        <input type="file" class="form-control" id="book-file" name="book-file" value="<%- book.fileBook %>" required>
       </div>
       <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="book-favorite" name="favorite" <%- book.favorite ? 'checked' : '' %>>

@@ -10,7 +10,7 @@ const library = [
 ];
 
 router.get('/', (request, response) => {
-  response.render('pages/index', { books: library });
+  response.render('../src/views/pages//index', { books: library });
   // response.json(library);
 });
 
@@ -22,7 +22,7 @@ router.get('/:id', (request, response) => {
     response.status(404);
     return response.json('404 Страница не найдена');
   }
-  return response.render('pages/view', { book: library[index] });
+  return response.render('../src/views/pages//view', { book: library[index] });
 
   // response.json(library[index]);
 });
@@ -35,7 +35,7 @@ router.get('/update/:id', (request, response) => {
     response.status(404);
     return response.json('404 Страница не найдена');
   }
-  return response.render('pages/update', { book: library[index] });
+  return response.render('../src/views/pages/update', { book: library[index] });
 });
 
 router.post(
@@ -43,7 +43,7 @@ router.post(
   // upload.single('book-file'),
   upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
   (request, response) => {
-    if (request.files['book-file'][0] && request.files['cover-file'][0]) {
+    if (request.files['book-file'] && request.files['cover-file']) {
       const {
         title, authors, description, favorite,
       } = request.body;
@@ -67,35 +67,38 @@ router.post(
   '/:id',
   upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
   (request, response) => {
-    const { id } = request.params;
-    const index = library.findIndex(item => item.id === id);
+    if (request.files['book-file'] && request.files['cover-file']) {
+      const { id } = request.params;
+      const index = library.findIndex(item => item.id === id);
 
-    if (index === -1) {
-      response.status(404);
-      return response.json('404 Страница не найдена');
+      if (index === -1) {
+        response.status(404);
+        return response.json('404 Страница не найдена');
+      }
+
+      const {
+        title, authors, description, favorite,
+      } = request.body;
+      const fileBook = request.files['book-file'][0].filename;
+      const fileCover = request.files['cover-file'][0].filename;
+      const fileName = request.files['book-file'][0].originalname;
+
+      library[index] = {
+        ...library[index],
+        title,
+        authors,
+        description,
+        favorite,
+        fileCover,
+        fileName,
+        fileBook,
+      };
+
+      response.status(200);
+      return response.redirect('/api/books');
+      // response.json(library[index]);
     }
-
-    const {
-      title, authors, description, favorite,
-    } = request.body;
-    const fileBook = request.files['book-file'][0].filename;
-    const fileCover = request.files['cover-file'][0].filename;
-    const fileName = request.files['book-file'][0].originalname;
-
-    library[index] = {
-      ...library[index],
-      title,
-      authors,
-      description,
-      favorite,
-      fileCover,
-      fileName,
-      fileBook,
-    };
-
-    response.status(200);
-    return response.redirect('/api/books');
-    // response.json(library[index]);
+    return response.json('File not found');
   },
 );
 

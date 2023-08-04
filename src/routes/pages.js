@@ -3,15 +3,15 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (request, response) => {
-  response.render('pages/main');
+  response.render('../src/views/pages/main');
 });
 
 router.get('/create', (request, response) => {
-  response.render('pages/create');
+  response.render('../src/views/pages/create');
 });
 
 router.get('/update', (request, response) => {
-  response.render('pages/update');
+  response.render('../src/views/pages/update');
 });
 
 module.exports = router;
