@@ -5,10 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",
+    "dev": "nodemon -L",
     "lint": "eslint .",
-    "fix": "eslint . --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "fix": "eslint . --fix"
   },
   "author": "toha62",
   "license": "ISC",

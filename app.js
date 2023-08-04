@@ -14,4 +14,6 @@ app.use('/api/user', userRouter);
 app.use('/api/books', booksRouter);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`Server listening port ${PORT}`);
+});
