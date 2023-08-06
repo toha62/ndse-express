@@ -17,6 +17,7 @@
           <input type="checkbox" class="form-check-input" id="book-favorite" <%- book.favorite ? 'checked' : '' %>>
           <label class="form-check-label" for="book-favorite">В избранном</label>
         </div>
+        <p class="card-text">Просмотров: <%= counter %></p>
         <a href="/api/books/update/<%= book.id %>" class="btn btn-primary">Редактировать</a>
         <a href="/api/books" class="btn btn-primary">Закрыть</a>        
       </div>

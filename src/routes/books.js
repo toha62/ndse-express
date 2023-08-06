@@ -1,8 +1,14 @@
 const express = require('express');
+const axios = require('axios');
 
 const router = express.Router();
 const upload = require('../middleware/upload');
 const Book = require('../Book');
+
+const COUNTER_URL = process.env.COUNTER_URL || 'locallhost';
+const instance = axios.create({
+  baseURL: `http://${COUNTER_URL}`,
+});
 
 const library = [
   new Book('Война и мир', 'Л.Н.Толстой', 'Русская классика', ''),
@@ -14,7 +20,7 @@ router.get('/', (request, response) => {
   // response.json(library);
 });
 
-router.get('/:id', (request, response) => {
+router.get('/:id', async (request, response) => {
   const { id } = request.params;
   const index = library.findIndex(item => item.id === id);
 
@@ -22,7 +28,12 @@ router.get('/:id', (request, response) => {
     response.status(404);
     return response.json('404 Страница не найдена');
   }
-  return response.render('../src/views/pages//view', { book: library[index] });
+  console.log('Counter URL: ', COUNTER_URL);
+  const counterResponse = await instance.get(`/counter/${id}`);
+
+  console.log(counterResponse.data);
+
+  return response.render('../src/views/pages//view', { book: library[index], counter: counterResponse.data });
 
   // response.json(library[index]);
 });
@@ -124,7 +135,7 @@ router.get('/:id/download', (request, response) => {
     return response.json('404 Страница не найдена');
   }
 
-  response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
+  return response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
     if (err) {
       response.status(404).json(err);
     }
