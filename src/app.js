@@ -14,9 +14,7 @@ app.use('/api/user', userRouter);
 app.use('/api/books', booksRouter);
 
 const PORT = process.env.PORT || 3000;
-const COUNTER_URL = process.env.COUNTER_URL || 'locallhost';
 
 app.listen(PORT, () => {
   console.log(`Server listening port ${PORT}`);
-  console.log('Counter URL: ', COUNTER_URL);
 });

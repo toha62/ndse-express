@@ -7,7 +7,7 @@ const Book = require('../Book');
 
 const COUNTER_URL = process.env.COUNTER_URL || 'locallhost';
 const instance = axios.create({
-  baseURL: `http://${COUNTER_URL}`,
+  baseURL: COUNTER_URL,
 });
 
 const library = [
@@ -28,10 +28,9 @@ router.get('/:id', async (request, response) => {
     response.status(404);
     return response.json('404 Страница не найдена');
   }
-  console.log('Counter URL: ', COUNTER_URL);
-  const counterResponse = await instance.get(`/counter/${id}`);
 
-  console.log(counterResponse.data);
+  await instance.post(`/counter/${id}/incr`);
+  const counterResponse = await instance.get(`/counter/${id}`);
 
   return response.render('../src/views/pages//view', { book: library[index], counter: counterResponse.data });
 

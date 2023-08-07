@@ -11,7 +11,7 @@ services:
     depends_on:
       - storage
   library:
-    image: toha62/library:0.0.1
+    image: toha62/library:0.1.0
     volumes:
       - .:/app
     working_dir: /app
@@ -19,7 +19,7 @@ services:
       - 80:3000
     environment:
       - PORT=3000      
-      - COUNTER_URL=counter:3002
+      - COUNTER_URL=http://counter:3002
     command: npm run dev
     depends_on:      
       - counter
