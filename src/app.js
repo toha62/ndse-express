@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const pagesRouter = require('./routes/pages');
 const userRouter = require('./routes/user');
@@ -13,8 +14,21 @@ app.use('/', pagesRouter);
 app.use('/api/user', userRouter);
 app.use('/api/books', booksRouter);
 
-const PORT = process.env.PORT || 3000;
+async function start(PORT, DB_URL) {
+  try {
+    await mongoose.connect(DB_URL);
+    console.log('Mongoose connected');
 
-app.listen(PORT, () => {
-  console.log(`Server listening port ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`Server listening port ${PORT}`);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const PORT = process.env.PORT || 3000;
+// eslint-disable-next-line prefer-destructuring
+const DB_URL = process.env.DB_URL;
+
+start(PORT, DB_URL);

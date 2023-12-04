@@ -11,7 +11,7 @@ services:
     depends_on:
       - storage
   library:
-    image: toha62/library:0.1.0
+    image: node:19.8
     volumes:
       - .:/app
     working_dir: /app
