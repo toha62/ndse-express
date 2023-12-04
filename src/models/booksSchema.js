@@ -1,9 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const librarySchema = new Schema({
-  id: {
-    type: String,
-  },
+const booksSchema = new Schema({
   title: {
     type: String,
   },
@@ -15,13 +12,16 @@ const librarySchema = new Schema({
   },
   favorite: {
     type: String,
+    default: '',
   },
   fileCover: {
     type: String,
+    default: '',
   },
   fileName: {
     type: String,
+    default: '',
   },
 });
 
-module.exports = model('Library', librarySchema);
+module.exports = model('books', booksSchema);

@@ -4,7 +4,7 @@
 <body>
   <div class="container">
     <h3>Изменеие книги</h3>
-    <form action="/api/books/<%= book.id %>" method="post" enctype="multipart/form-data">
+    <form action="/api/books/<%= book._id %>" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="book-title" class="form-label">Название Книги</label>
         <input type="text" value="<%- book.title %>" class="form-control" id="book-title" name="title" required>

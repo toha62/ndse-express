@@ -1,73 +1,96 @@
 const express = require('express');
 const axios = require('axios');
+const upload = require('../middleware/upload');
+const Books = require('../models/booksSchema');
 
 const router = express.Router();
-const upload = require('../middleware/upload');
-const Book = require('../Book');
-
 const COUNTER_URL = process.env.COUNTER_URL || 'locallhost';
 const instance = axios.create({
   baseURL: COUNTER_URL,
 });
 
-const library = [
-  new Book('Война и мир', 'Л.Н.Толстой', 'Русская классика', ''),
-  new Book('Академия', 'А.Азимов', 'Фантастика', 't'),
-];
+// начальное заполнение БД для тестирования
+(async function fillDB() {
+  try {
+    await Books.insertMany([
+      {
+        title: 'Война и мир!',
+        authors: 'Л.Н.Толстой',
+        description: 'Русская классика',
+      },
+      {
+        title: 'Академия!',
+        authors: 'А.Азимов',
+        description: 'Фантастика',
+      },
+    ]);
+  } catch (err) {
+    console.log('Error database initial insertion', err);
+  }
+}());
 
-router.get('/', (request, response) => {
-  response.render('../src/views/pages//index', { books: library });
-  // response.json(library);
+router.get('/', async (request, response) => {
+  try {
+    const books = await Books.find().select('-__v');
+
+    response.render('../src/views/pages//index', { books });
+  } catch (err) {
+    response.status(500).json(err);
+  }
 });
 
 router.get('/:id', async (request, response) => {
   const { id } = request.params;
-  const index = library.findIndex(item => item.id === id);
 
-  if (index === -1) {
-    response.status(404);
-    return response.json('404 Страница не найдена');
+  try {
+    const book = await Books.findById(id).select('-__v');
+    console.log(book);
+    await instance.post(`/counter/${id}/incr`);
+    const counterResponse = await instance.get(`/counter/${id}`);
+
+    response.render('../src/views/pages//view', { book, counter: counterResponse.data });
+  } catch (err) {
+    response.status(404).json(err);
   }
-
-  await instance.post(`/counter/${id}/incr`);
-  const counterResponse = await instance.get(`/counter/${id}`);
-
-  return response.render('../src/views/pages//view', { book: library[index], counter: counterResponse.data });
-
-  // response.json(library[index]);
 });
 
-router.get('/update/:id', (request, response) => {
+router.get('/update/:id', async (request, response) => {
   const { id } = request.params;
-  const index = library.findIndex(item => item.id === id);
+  // const index = library.findIndex(item => item.id === id);
+  try {
+    const book = await Books.findById(id).select('-__v');
+    console.log(book);
 
-  if (index === -1) {
-    response.status(404);
-    return response.json('404 Страница не найдена');
+    response.render('../src/views/pages/update', { book });
+  } catch (err) {
+    response.status(404).json(err);
   }
-  return response.render('../src/views/pages/update', { book: library[index] });
 });
 
 router.post(
   '/',
-  // upload.single('book-file'),
   upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
-  (request, response) => {
+  async (request, response) => {
     if (request.files['book-file'] && request.files['cover-file']) {
       const {
         title, authors, description, favorite,
       } = request.body;
-      const fileBook = request.files['book-file'][0].filename;
+      // const fileBook = request.files['book-file'][0].filename;
       const fileCover = request.files['cover-file'][0].filename;
       const fileName = request.files['book-file'][0].originalname;
 
-      const book = new Book(title, authors, description, favorite, fileCover, fileName, fileBook);
+      const newBook = new Books({
+        title, authors, description, favorite, fileCover, fileName,
+      });
 
-      library.push(book);
+      try {
+        await newBook.save();
 
-      response.status(201);
-      return response.redirect('/api/books');
-      // response.json(book);
+        response.status(201);
+        return response.redirect('/api/books');
+      } catch (err) {
+        response.status(500).json(err);
+      }
     }
     return response.json('File not found');
   },
@@ -76,69 +99,60 @@ router.post(
 router.post(
   '/:id',
   upload.fields([{ name: 'book-file', maxCount: 1 }, { name: 'cover-file', maxCount: 1 }]),
-  (request, response) => {
+  async (request, response) => {
     if (request.files['book-file'] && request.files['cover-file']) {
       const { id } = request.params;
-      const index = library.findIndex(item => item.id === id);
-
-      if (index === -1) {
-        response.status(404);
-        return response.json('404 Страница не найдена');
-      }
 
       const {
         title, authors, description, favorite,
       } = request.body;
-      const fileBook = request.files['book-file'][0].filename;
+      // const fileBook = request.files['book-file'][0].filename;
       const fileCover = request.files['cover-file'][0].filename;
       const fileName = request.files['book-file'][0].originalname;
 
-      library[index] = {
-        ...library[index],
-        title,
-        authors,
-        description,
-        favorite,
-        fileCover,
-        fileName,
-        fileBook,
+      const updateBook = {
+        title, authors, description, favorite, fileCover, fileName,
       };
 
-      response.status(200);
-      return response.redirect('/api/books');
-      // response.json(library[index]);
+      try {
+        await Books.findByIdAndUpdate(id, updateBook);
+
+        response.status(200);
+        return response.redirect('/api/books');
+      } catch (err) {
+        response.status(404).json(err);
+      }
     }
     return response.json('File not found');
   },
 );
 
-router.delete('/:id', (request, response) => {
+router.get('/delete/:id', async (request, response) => {
   const { id } = request.params;
-  const index = library.findIndex(item => item.id === id);
 
-  if (index === -1) {
-    response.status(404);
-    return response.json('404 Страница не найдена');
+  try {
+    await Books.findByIdAndDelete(id);
+
+    response.redirect('/api/books');
+  } catch (err) {
+    response.status(404).json(err);
   }
-
-  library.splice(index, 1);
-  return response.json('Ok');
 });
 
-router.get('/:id/download', (request, response) => {
-  const { id } = request.params;
-  const index = library.findIndex(item => item.id === id);
+// router.get('/:id/download', (request, response) => {
+//   const { id } = request.params;
+//   const index = library.findIndex(item => item.id === id);
 
-  if (index === -1) {
-    response.status(404);
-    return response.json('404 Страница не найдена');
-  }
+//   if (index === -1) {
+//     response.status(404);
+//     return response.json('404 Страница не найдена');
+//   }
 
-  return response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
-    if (err) {
-      response.status(404).json(err);
-    }
-  });
-});
+//   return response.download(`${__dirname}/../storage/${library[index].fileBook}`, err => {
+//     if (err) {
+//       response.status(404).json(err);
+//     }
+//   });
+// });
 
 module.exports = router;

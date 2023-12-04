@@ -10,7 +10,7 @@
       <div class="list-group">
 
         <% books.map(book => { %>
-          <a href="/api/books/<%= book.id %>" class="list-group-item" aria-current="true">
+          <a href="/api/books/<%= book._id %>" class="list-group-item" aria-current="true">
             <h5 class="mb-1"><%= book.title %></h5>       
             <p class="mb-1"><%= book.authors %></p>
             <small><%= book.description %></small>
