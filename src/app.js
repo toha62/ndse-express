@@ -16,7 +16,9 @@ app.use('/api/books', booksRouter);
 
 async function start(PORT, DB_URL) {
   try {
-    await mongoose.connect(DB_URL);
+    await mongoose.connect(DB_URL, {
+      dbName: 'library',
+    });
     console.log('Mongoose connected');
 
     app.listen(PORT, () => {
