@@ -14,12 +14,12 @@ const instance = axios.create({
   try {
     await Books.insertMany([
       {
-        title: 'Война и мир!',
+        title: 'Война и мир',
         authors: 'Л.Н.Толстой',
         description: 'Русская классика',
       },
       {
-        title: 'Академия!',
+        title: 'Академия',
         authors: 'А.Азимов',
         description: 'Фантастика',
       },
@@ -44,7 +44,7 @@ router.get('/:id', async (request, response) => {
 
   try {
     const book = await Books.findById(id).select('-__v');
-    console.log(book);
+    // console.log(book);
     await instance.post(`/counter/${id}/incr`);
     const counterResponse = await instance.get(`/counter/${id}`);
 
@@ -56,10 +56,10 @@ router.get('/:id', async (request, response) => {
 
 router.get('/update/:id', async (request, response) => {
   const { id } = request.params;
-  // const index = library.findIndex(item => item.id === id);
+
   try {
     const book = await Books.findById(id).select('-__v');
-    console.log(book);
+    // console.log(book);
 
     response.render('../src/views/pages/update', { book });
   } catch (err) {

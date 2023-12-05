@@ -21,6 +21,7 @@ coverage
 
 # Storage directory
 storage
+data
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
