@@ -7,11 +7,7 @@ router.get('/login', (request, response) => {
 });
 
 router.get('/me', (request, response) => {
-  response.status(201);
-  response.json({
-    id: 1,
-    profile: 'me',
-  });
+  response.render('../src/views/pages//user-profile');
 });
 
 module.exports = router;
