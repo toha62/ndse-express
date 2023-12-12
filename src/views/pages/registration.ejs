@@ -3,9 +3,9 @@
 <%- include('../partials/head'); %>
 <body>
   <div class="container d-grid gap-2 col-6 mx-auto">
-    <h3>Вход и регистрация</h3>
+    <h3>Регистрация нового пользователя</h3>
 
-    <form action="/api/user/login" method="post" enctype="multipart/form-data">
+    <form action="/api/user/signup" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="user-name" class="form-label">Имя пользователя</label>
         <input type="text" class="form-control" id="user-name" required>
@@ -15,12 +15,11 @@
         <input type="password" class="form-control" id="user-password" required>
       </div>
       <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary">Вход</button>
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         <a href="/" class="btn btn-primary">Отмена</a>
       </div>      
     </form>
 
-    <a href="/registration" class="btn btn-primary m-5">Регистрация</a>
   </div> 
   
 <%- include('../partials/footer'); %>
