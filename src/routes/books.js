@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const upload = require('../middleware/upload');
 const Books = require('../models/booksSchema');
+const fillDB = require('../db/fill-db');
 
 const router = express.Router();
 const COUNTER_URL = process.env.COUNTER_URL || 'locallhost';
@@ -10,24 +11,7 @@ const instance = axios.create({
 });
 
 // начальное заполнение БД для тестирования
-(async function fillDB() {
-  try {
-    await Books.insertMany([
-      {
-        title: 'Война и мир',
-        authors: 'Л.Н.Толстой',
-        description: 'Русская классика',
-      },
-      {
-        title: 'Академия',
-        authors: 'А.Азимов',
-        description: 'Фантастика',
-      },
-    ]);
-  } catch (err) {
-    console.log('Error database initial insertion', err);
-  }
-}());
+fillDB();
 
 router.get('/', async (request, response) => {
   try {
