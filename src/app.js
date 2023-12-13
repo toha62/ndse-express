@@ -1,17 +1,60 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
+const db = require('./db');
 
 const pagesRouter = require('./routes/pages');
 const userRouter = require('./routes/user');
 const booksRouter = require('./routes/books');
 
-const app = express();
+const verify = (username, password, done) => {
+  db.users.findByUsername(username, (err, user) => {
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false);
+    }
 
+    if (!db.users.verifyPassword(user, password)) {
+      return done(null, false);
+    }
+
+    return done(null, user);
+  });
+};
+
+const options = {
+  usernameField: 'username',
+  passwordField: 'password',
+};
+
+passport.use('local', new LocalStrategy(options, verify));
+
+passport.serializeUser((user, cb) => {
+  cb(null, user.id);
+});
+
+passport.deserializeUser((id, cb) => {
+  db.users.findById(id, (err, user) => {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null, user);
+  });
+});
+
+const app = express();
 app.set('view engine', 'ejs');
 
 app.use(express.json());
+app.use(session({ secret: 'SECRET' }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', pagesRouter);
 app.use('/api/user', userRouter);
 app.use('/api/books', booksRouter);
