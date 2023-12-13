@@ -6,13 +6,13 @@ async function fillDB() {
   try {
     await Users.insertMany([
       {
-        userName: 'Иван Петров',
+        username: 'Иван Петров',
         password: '123',
         displayName: 'Ivan',
         email: 'ivan@mail.com',
       },
       {
-        userName: 'Джон Уик',
+        username: 'Джон Уик',
         password: '111',
         displayName: 'John',
         email: 'john@mail.com',
