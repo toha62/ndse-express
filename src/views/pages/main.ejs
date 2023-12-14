@@ -4,8 +4,11 @@
 
 <body>
   <div class="container">
-    <%- include('../partials/nav-menu'); %>
-    <h3>Библиотека для создания, хранения и редактирования книг</h3>     
+    <%- include('../partials/nav-menu'), { user } %>
+    <h3>Библиотека для создания, хранения и редактирования книг</h3> 
+    <% if (user) { %>
+      <p>Привет, <%= user.username %>. </p>    
+    <% } %>    
   </div>
 
   <%- include('../partials/footer'); %>  

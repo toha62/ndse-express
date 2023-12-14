@@ -3,42 +3,48 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const db = require('./db');
+const db = require('./db/users');
 
 const pagesRouter = require('./routes/pages');
 const userRouter = require('./routes/user');
 const booksRouter = require('./routes/books');
 
 const verify = (username, password, done) => {
-  db.users.findByUsername(username, (err, user) => {
+  console.log('verify user: ', username, 'password: ', password);
+  db.findByUsername(username, (err, user) => {
     if (err) {
+      console.log('error: ', err);
       return done(err);
     }
     if (!user) {
+      console.log('no user');
       return done(null, false);
     }
-
-    if (!db.users.verifyPassword(user, password)) {
+    if (!db.verifyPassword(user, password)) {
+      console.log('wrong password for user: ', user);
       return done(null, false);
     }
-
+    console.log('verify OK. User: ', user);
     return done(null, user);
   });
 };
 
 const options = {
   usernameField: 'username',
-  passwordField: 'password',
+  passwordField: 'userpassword',
 };
 
 passport.use('local', new LocalStrategy(options, verify));
 
 passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+  console.log('serialize user:', user);
+  // eslint-disable-next-line no-underscore-dangle
+  cb(null, user._id);
 });
 
 passport.deserializeUser((id, cb) => {
-  db.users.findById(id, (err, user) => {
+  console.log('deserialize user id: ', id);
+  db.findById(id, (err, user) => {
     if (err) {
       return cb(err);
     }
@@ -50,8 +56,8 @@ const app = express();
 app.set('view engine', 'ejs');
 
 app.use(express.json());
+app.use(express.urlencoded());
 app.use(session({ secret: 'SECRET' }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,6 +79,25 @@ async function start(PORT, DB_URL) {
     console.log(err);
   }
 }
+
+// TEST TEST TEST
+// app.get('/', (request, response) => {
+//   response.render('../src/views/pages/main');
+// });
+
+// app.get('/api/user/login', (request, response) => {
+//   response.render('../src/views/pages//login');
+// });
+
+// app.post(
+//   '/api/user/login',
+//   passport.authenticate('local', { failureRedirect: '/' }),
+//   (request, response) => {
+//     console.log('req.user: ', request.user);
+//     response.redirect('/');
+//   },
+// );
+// TEST TEST TEST
 
 const PORT = process.env.PORT || 3000;
 // eslint-disable-next-line prefer-destructuring

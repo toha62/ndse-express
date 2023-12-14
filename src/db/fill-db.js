@@ -6,15 +6,15 @@ async function fillDB() {
   try {
     await Users.insertMany([
       {
-        username: 'Иван Петров',
+        username: 'Ivan',
         password: '123',
-        displayName: 'Ivan',
+        displayName: 'Иван Петров',
         email: 'ivan@mail.com',
       },
       {
-        username: 'Джон Уик',
+        username: 'John',
         password: '111',
-        displayName: 'John',
+        displayName: 'Джон Уик',
         email: 'john@mail.com',
       },
     ]);
@@ -37,6 +37,9 @@ async function fillDB() {
   } catch (err) {
     console.log('Error database initial insertion Books', err);
   }
+
+  const test = await Users.find();
+  console.log(test);
 }
 
 module.exports = fillDB;
