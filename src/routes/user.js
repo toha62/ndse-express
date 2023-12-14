@@ -22,10 +22,23 @@ router.get(
 
 router.post(
   '/login',
-  passport.authenticate('local', { failureRedirect: '/' }),
+  passport.authenticate('local', { failureRedirect: 'login' }),
   (request, response) => {
     console.log('req.user: ', request.user);
     response.redirect('/');
+  },
+);
+
+router.get(
+  '/logout',
+  (request, response, next) => {
+    console.log('logout');
+    request.logout(err => {
+      if (err) {
+        return next(err);
+      }
+      return response.redirect('/');
+    });
   },
 );
 
