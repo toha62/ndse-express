@@ -20,7 +20,7 @@ services:
       - storage
 
   library:
-    image: toha62/library:1.0.0   
+    image: toha62/library:1.1.0   
     volumes:
       - .:/app 
     ports:
