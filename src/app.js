@@ -17,14 +17,11 @@ const verify = (username, password, done) => {
       return done(err);
     }
     if (!user) {
-      console.log('no user');
       return done(null, false);
     }
     if (!db.verifyPassword(user, password)) {
-      console.log('wrong password for user: ', user);
       return done(null, false);
     }
-    console.log('verify OK. User: ', user);
     return done(null, user);
   });
 };
@@ -37,13 +34,11 @@ const options = {
 passport.use('local', new LocalStrategy(options, verify));
 
 passport.serializeUser((user, cb) => {
-  console.log('serialize user:', user);
   // eslint-disable-next-line no-underscore-dangle
   cb(null, user._id);
 });
 
 passport.deserializeUser((id, cb) => {
-  console.log('deserialize user id: ', id);
   db.findById(id, (err, user) => {
     if (err) {
       return cb(err);
@@ -79,25 +74,6 @@ async function start(PORT, DB_URL) {
     console.log(err);
   }
 }
-
-// TEST TEST TEST
-// app.get('/', (request, response) => {
-//   response.render('../src/views/pages/main');
-// });
-
-// app.get('/api/user/login', (request, response) => {
-//   response.render('../src/views/pages//login');
-// });
-
-// app.post(
-//   '/api/user/login',
-//   passport.authenticate('local', { failureRedirect: '/' }),
-//   (request, response) => {
-//     console.log('req.user: ', request.user);
-//     response.redirect('/');
-//   },
-// );
-// TEST TEST TEST
 
 const PORT = process.env.PORT || 3000;
 // eslint-disable-next-line prefer-destructuring

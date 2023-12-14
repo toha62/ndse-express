@@ -3,6 +3,9 @@ const Users = require('../models/usersSchema');
 
 // начальное заполнение БД для тестирования
 async function fillDB() {
+  await Users.deleteMany({});
+  await Books.deleteMany({});
+
   try {
     await Users.insertMany([
       {
