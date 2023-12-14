@@ -7,9 +7,18 @@ router.get('/login', (request, response) => {
   response.render('../src/views/pages//login');
 });
 
-router.get('/me', (request, response) => {
-  response.render('../src/views/pages//user-profile');
-});
+router.get(
+  '/me',
+  (request, response, next) => {
+    if (!request.isAuthenticated()) {
+      return response.redirect('/login');
+    }
+    return next();
+  },
+  (request, response) => {
+    response.render('../src/views/pages//user-profile', { user: request.user });
+  },
+);
 
 router.post(
   '/login',

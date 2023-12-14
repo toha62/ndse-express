@@ -3,7 +3,7 @@
 <%- include('../partials/head'); %>
 <body>
   <div class="container">
-    <%- include('../partials/nav-menu'); %>
+    <%- include('../partials/nav-menu'), { user } %>
     <h3>Просмотр книг из библиотеки</h3> 
   
     <% if (books.length) { %>

@@ -17,7 +17,7 @@ router.get('/', async (request, response) => {
   try {
     const books = await Books.find().select('-__v');
 
-    response.render('../src/views/pages//index', { books });
+    response.render('../src/views/pages//index', { books, user: request.user });
   } catch (err) {
     response.status(500).json(err);
   }
@@ -28,7 +28,7 @@ router.get('/:id', async (request, response) => {
 
   try {
     const book = await Books.findById(id).select('-__v');
-    // console.log(book);
+
     await instance.post(`/counter/${id}/incr`);
     const counterResponse = await instance.get(`/counter/${id}`);
 
@@ -43,7 +43,6 @@ router.get('/update/:id', async (request, response) => {
 
   try {
     const book = await Books.findById(id).select('-__v');
-    // console.log(book);
 
     response.render('../src/views/pages/update', { book });
   } catch (err) {
